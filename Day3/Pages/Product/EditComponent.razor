@@ -1,0 +1,64 @@
+﻿@page "/product/edit/{id:int}"
+<PageTitle>Edit</PageTitle>
+@using Day3.Services
+@using Day3.Models
+<h3>EditComponent</h3>
+@if (Product != null)
+{
+    <EditForm Model="@Product" OnInvalidSubmit="e" OnValidSubmit="Save">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div>
+            <label>Name</label>
+            <InputText class="form form-control" @bind-Value="@Product.Name"></InputText>
+        </div>
+        <div>
+            <label>Price</label>
+            <InputNumber class="form form-control" @bind-Value="@Product.Price"></InputNumber>
+        </div>
+        <div>
+            <label>Description</label>
+            <InputText class="form form-control" @bind-Value="@Product.Description"></InputText>
+        </div>
+        <div>
+            <label>Quantity</label>
+            <InputNumber class="form form-control" @bind-Value="@Product.Quantity"></InputNumber>
+        </div>
+        <div>
+            <label>Image</label>
+            <InputText class="form form-control" @bind-Value="@Product.Image"></InputText>
+        </div>
+        <input type="submit" class="btn btn-success" value="Save" />
+    </EditForm>
+}
+else
+{
+    <p>Loading...</p>
+}
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Inject]
+    public IServices<Product> ProductService { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+    public Product Product { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Product = await ProductService.GetById(id);
+        base.OnInitializedAsync();
+    }
+
+    async Task Save()
+    {
+        await ProductService.Update(id, Product);
+        NavigationManager.NavigateTo("/product");
+    }
+    void e()
+    {
+      
+    }
+
+}

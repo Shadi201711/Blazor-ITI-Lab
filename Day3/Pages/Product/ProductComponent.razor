@@ -1,0 +1,56 @@
+﻿@page "/product"
+<PageTitle>Product</PageTitle>
+@using Day3.Services
+@using Day3.Models
+<h3>ProductComponent</h3>
+@if (Products != null)
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Details</th>
+                <th>Edit</th>
+             
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Products)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td><img src="/images/@product.Image" width="50" height="50" /></td>
+                    <td>@product.Description</td>
+                    <td>@product.Quantity</td>
+                    <td><a href="/Product/Details/@product.Id">Details</a></td>
+                    <td><a href="/Product/Edit/@product.Id">Edit</a></td>
+             
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+@code {
+    public List<Product>? Products { get; set; }
+    [Inject]
+    public IServices<Product> ProductService { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await ProductService.GetAll();
+        base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,35 @@
+﻿<PageTitle>Details</PageTitle>
+@page "/product/details/{id:int}"
+@using Day3.Services
+@using Day3.Models
+<h3>DetailsComponent</h3>
+@if(Product != null)
+{
+    <div class="card" style="width: 18rem;">
+        <img src="/images/@Product.Image" class="card-img-top" alt="@Product.Name">
+        <div class="card-body">
+            <h5 class="card-title text-center">@Product.Name</h5>
+            <p class="card-text">Price: @Product.Price</p>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+<a href="/product" class="btn btn-primary">Back</a>
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Inject]
+    public IServices<Product> ProductService { get; set; }
+
+    public Product Product { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Product = await ProductService.GetById(id); 
+        base.OnInitializedAsync();
+    }
+}
